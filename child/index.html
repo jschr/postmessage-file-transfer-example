@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>child</title>
+  </head>
+  <style>
+    img,
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+  </style>
+  <body>
+    <img src="" />
+    <video src="" />
+
+    <script>
+      const image = document.querySelector("img");
+      const video = document.querySelector("video");
+
+      window.addEventListener("message", (event) => {
+        const type = event.data.type;
+        const buffer = event.data.buffer;
+
+        console.log("buffer in child", buffer.byteLength);
+        const blob = new Blob([buffer]);
+        const url = URL.createObjectURL(blob);
+
+        console.log("url", url);
+
+        if (type.includes("image/")) {
+          video.style.display = "none";
+          video.pause();
+          image.style.display = "block";
+          image.src = url;
+        } else if (type.includes("video/")) {
+          image.style.display = "none";
+          video.style.display = "block";
+          video.src = url;
+          video.play();
+        } else {
+          console.warn(`invalid type ${event.data.type}`);
+        }
+      });
+    </script>
+  </body>
+</html>

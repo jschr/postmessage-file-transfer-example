@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>parent</title>
+
+    <style>
+      iframe {
+        width: 800px;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" />
+    <br />
+    <iframe src="http://127.0.0.1:8083"></iframe>
+
+    <script>
+      const input = document.querySelector("input");
+      const frame = document.querySelector("iframe");
+
+      const postFile = (file) => {
+        console.log("postFile", file);
+        const reader = new FileReader();
+
+        reader.addEventListener(
+          "load",
+          () => {
+            // convert image file to base64 string
+            const buffer = reader.result;
+            console.log("buffer before postMessage", buffer.byteLength);
+            frame.contentWindow.postMessage({ type: file.type, buffer }, "*", [
+              buffer,
+            ]);
+            console.log("buffer after postMessage", buffer.byteLength);
+          },
+          false
+        );
+
+        reader.readAsArrayBuffer(file);
+      };
+
+      input.addEventListener(
+        "change",
+        (e) => {
+          if (e.target.files && e.target.files[0]) {
+            postFile(e.target.files[0]);
+          }
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

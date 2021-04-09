@@ -25,7 +25,6 @@
         reader.addEventListener(
           "load",
           () => {
-            // convert image file to base64 string
             const buffer = reader.result;
             console.log("buffer before postMessage", buffer.byteLength);
             frame.contentWindow.postMessage({ type: file.type, buffer }, "*", [
